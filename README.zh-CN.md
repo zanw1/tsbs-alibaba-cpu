@@ -102,15 +102,7 @@ SF1 和 SF10 适合做正确性检查和冒烟测试。它们的 CPU 分布与�
 
 ## 获取数据
 
-生成好的数据集（两个视图、四个规模，合计约 4 GB）**目前还没有公开托管**，需要按下面的步骤从公开输入重建。构造过程是确定性的，可以把输出与 [`docs/checksums.sha256`](docs/checksums.sha256) 比对。
-
-环境要求：
-
-- Python 3.11+ 和 [uv](https://docs.astral.sh/uv/)。
-- 约 20 GB 可用磁盘空间：原始 CSV 9 GB，TSBS 参考数据 3.3 GB，输出 4 GB，下载的压缩包 1.8 GB。
-- 只有自己生成 TSBS 参考数据时才需要 Go。
-
-在 Apple M4（32 GB 内存）上，构造或验证全部四个规模各需约 2 分钟。内存峰值很小，因为 CPU 网格只有 1000 × 8640 字节。
+有两条路径。多数使用者只需下载 GitHub Release；只有在需要对照原始 CSV 做源验证，或要改日期／机器集合时，才从原始输入重建。
 
 ### 1. 安装
 
@@ -120,9 +112,38 @@ uv sync --locked
 uv run --locked tsbs-alibaba-cpu --help
 ```
 
-### 2. 下载 Alibaba 机器使用率表
+### 2. 下载已发布的数据集（推荐）
 
-Alibaba 希望使用者先填写一份[简短问卷](http://alibabadeveloper.mikecrm.com/BdJtacN)。下面的直链来自官方的 [`fetchData.sh`](https://github.com/alibaba/clusterdata/blob/master/cluster-trace-v2018/fetchData.sh)。
+GitHub Releases 提供 SF1–SF1000 的 `compatible` 与 `matched_tsbs` 视图，以及查询目录和机器映射。**不包含** Alibaba 原始的 `machine_usage.csv`，也不包含构造时用的 TSBS 参考 ILP。
+
+```bash
+mkdir -p data
+curl -L -o data/alibaba_day1-v0.2.0.tar.gz \
+  https://github.com/zanw1/tsbs-alibaba-cpu/releases/download/v0.2.0/alibaba_day1-v0.2.0.tar.gz
+# 可选：curl -L -o data/alibaba_day1-v0.2.0.tar.gz.sha256 \
+#   https://github.com/zanw1/tsbs-alibaba-cpu/releases/download/v0.2.0/alibaba_day1-v0.2.0.tar.gz.sha256
+#   (cd data && shasum -a 256 -c alibaba_day1-v0.2.0.tar.gz.sha256)
+tar -xzf data/alibaba_day1-v0.2.0.tar.gz -C data
+# 得到 data/alibaba_day1-v0.2.0/，内含 compatible/、matched_tsbs/、queries/ 等
+```
+
+解压后即可导入 ILP，并使用 `queries/sfN.jsonl`。若要做源级 `validate`，仍需按下面的重建路径准备原始 CSV 和 TSBS 参考。
+
+该 Release 面向研究与学习用途，与 Alibaba 对原始 trace 的说明一致；本项目不对原始 trace 重新授权。
+
+### 3. 从原始输入重建（可选）
+
+完整重建的环境要求：
+
+- Python 3.11+ 和 [uv](https://docs.astral.sh/uv/)。
+- 约 20 GB 可用磁盘：原始 CSV 9 GB，TSBS 参考 3.3 GB，输出 4 GB，下载压缩包 1.8 GB。
+- 只有自己生成 TSBS 参考时才需要 Go。
+
+在 Apple M4（32 GB 内存）上，构造或验证全部四个规模各约 2 分钟。
+
+#### 3a. 下载 Alibaba `machine_usage.csv`
+
+请从官方 [Alibaba clusterdata](https://github.com/alibaba/clusterdata) 获取 v2018 机器使用率表（说明见 [trace_2018.md](https://github.com/alibaba/clusterdata/blob/master/cluster-trace-v2018/trace_2018.md)）。Alibaba 希望使用者先填写一份[简短问卷](http://alibabadeveloper.mikecrm.com/BdJtacN)。下面的直链来自官方 [`fetchData.sh`](https://github.com/alibaba/clusterdata/blob/master/cluster-trace-v2018/fetchData.sh)：
 
 ```bash
 mkdir -p inputs/raw
@@ -132,9 +153,9 @@ curl -L -o inputs/raw/machine_usage.tar.gz \
 tar -xzf inputs/raw/machine_usage.tar.gz -C inputs/raw
 ```
 
-压缩包 1.7 GB，解压后得到 `machine_usage.csv`：9.0 GB，246,934,820 行，覆盖 4,023 台机器、8 天。
+压缩包 1.7 GB，解压后得到 `machine_usage.csv`：9.0 GB，246,934,820 行，覆盖 4,023 台机器、8 天。本项目不会再分发该文件。
 
-### 3. 生成 TSBS 参考数据
+#### 3b. 生成 TSBS 参考数据
 
 从 [TSBS](https://github.com/timescale/tsbs) 编译 `tsbs_generate_data`，然后运行：
 
@@ -156,7 +177,7 @@ tsbs_generate_data --use-case=cpu-only --scale=N --initial-scale=N --seed=123 \
 
 > 生成参考校验和时所用的 TSBS 版本没有记录下来。如果你的 `inputs/tsbs_reference/*/cpu.ilp` 哈希与 [`docs/checksums.sha256`](docs/checksums.sha256) 不同，你得到的配对对照就与已发布版本不同，但构造和验证流程仍然可用。
 
-### 4. 构造
+#### 3c. 构造
 
 机器映射文件 [`inputs/machine_mapping.csv`](inputs/machine_mapping.csv) 已包含在仓库中，共 1,000 台机器。选取方法是：取第一天有有效 CPU 值的机器，按数字 ID 排序，再执行 `random.Random(123).sample(..., 1000)`。
 
@@ -176,7 +197,7 @@ uv run --locked tsbs-alibaba-cpu build \
 
 构造先写入临时目录，全部阶段成功后才发布，也不会覆盖已有输出。失败时会在目标目录旁写入一个 `*.failure-*.json` 诊断文件。
 
-### 5. 验证
+#### 3d. 验证
 
 ```bash
 shasum -a 256 -c docs/checksums.sha256       # 可选：与参考构造结果比对
@@ -187,7 +208,7 @@ uv run --locked tsbs-alibaba-cpu validate \
   --references inputs/tsbs_reference
 ```
 
-### 6. 可选：数据库回读检查
+#### 3e. 可选：数据库回读检查
 
 ```bash
 uv run --locked tsbs-alibaba-cpu oracle-check \
@@ -195,6 +216,47 @@ uv run --locked tsbs-alibaba-cpu oracle-check \
 ```
 
 该命令把一个视图的 SF1 导入一张名字唯一的临时 QuestDB WAL 表，读回全部 21 列进行比较，然后删除这张表。它只检查传输和类型，不能代替 `validate`。已在 QuestDB 9.3.4 上通过。
+
+## 超过 SF1000 的规模
+
+当前公开发布的映射到 1,000 台主机为止。这对正确性检查和多数配对实验已经够用。更大的规模不在默认 Release 里，但可以用同一套工具自行构造。
+
+硬上限与嵌套规则：
+
+- Trace 第 0 天大约有 **4,016** 台机器至少有一条有效 CPU 观测，这是单日构造的实际上限；v2018 全量共 4,023 台。
+- 较小规模必须是同一有序映射的**前缀**：SF1 ⊂ SF10 ⊂ SF100 ⊂ SF1000 ⊂ SF*N*。若扩展到超过 1,000 台，请保持现有 [`inputs/machine_mapping.csv`](inputs/machine_mapping.csv) 的前 1,000 行不变，这样已发布的 SF1000 校验和仍然有效。
+- 不能从 SF1000 文件外推得到 SF4000。多出来的主机需要新的 mapping 行、按该规模重新生成的 TSBS 参考，以及从原始 CSV 重建。即便机器／时间／CPU 键嵌套，TSBS 辅助列仍按每个规模单独生成，因此并不嵌套。
+- 不要在第 0 天硬造 SF10000：没有足够的不重复机器；重复主机或悄悄换一天都会改变实验语义。
+
+示例：扩展到 4,000 台主机，同时保留已发布的前缀。
+
+```bash
+# 1) 构造新 mapping：前 1000 行与 inputs/machine_mapping.csv 完全一致，
+#    其余行按固定规则从第 0 天机器中追加。
+# 2) 为所有需要的规模生成参考，包括新增规模。
+uv run --locked tsbs-alibaba-cpu generate-references \
+  --binary /path/to/tsbs_generate_data \
+  --output inputs/tsbs_reference_sf4000 \
+  --scales 1,10,100,1000,4000 --seed 123
+
+# 3) 输出到新目录（不会覆盖已有结果）。
+uv run --locked tsbs-alibaba-cpu build \
+  --source inputs/raw/machine_usage.csv \
+  --references inputs/tsbs_reference_sf4000 \
+  --mapping inputs/machine_mapping_sf4000.csv \
+  --output data/alibaba_day1_sf4000 \
+  --scales 1,10,100,1000,4000 --day 0 --query-samples 20
+```
+
+体积提示：SF4000 下完整的 TSBS `cpu-only` 一天是 `4000 × 8640` 行（稀疏过滤之前）。参考数据和输出占用大约是 SF1000 的数倍。
+
+维护者若要从本地构造结果打包 GitHub Release，可运行：
+
+```bash
+bash scripts/package_release.sh 0.2.0 data/alibaba_day1 dist/release
+```
+
+会生成 `dist/release/alibaba_day1-v0.2.0.tar.gz` 及同名 `.sha256`。归档中不含 `machine_usage.csv`、TSBS 参考，以及本地的 `validation_runs/`、`oracle_runs/`。
 
 ## 正确性约定
 

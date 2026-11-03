@@ -2,5 +2,6 @@ include uv.lock
 include LICENSE CHANGELOG.md README.zh-CN.md
 include inputs/machine_mapping.csv
 include inputs/reference_provenance.json
+include scripts/package_release.sh
 recursive-include docs *.md *.json *.sql *.sha256
 recursive-include tests *.py

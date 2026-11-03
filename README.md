@@ -102,15 +102,7 @@ Things to know before using the queries:
 
 ## Getting the data
 
-The generated datasets (about 4 GB for both views at all four scale factors) are **not hosted yet**. You rebuild them from the public inputs below. The build is deterministic, so you can compare your output with [`docs/checksums.sha256`](docs/checksums.sha256).
-
-Requirements:
-
-- Python 3.11+ and [uv](https://docs.astral.sh/uv/).
-- About 20 GB of free disk space: 9 GB for the raw CSV, 3.3 GB for the TSBS references, 4 GB for the output, and 1.8 GB for the downloaded archive.
-- Go, only if you generate the TSBS references yourself.
-
-On an Apple M4 with 32 GB of RAM, building or validating all four scale factors takes about 2 minutes each. Peak memory is small, because the CPU grid is 1000 × 8640 bytes.
+There are two paths. Most users only need the published release. Rebuild from the raw Alibaba CSV only if you want to verify source fidelity or change the day / machine set.
 
 ### 1. Install
 
@@ -120,9 +112,38 @@ uv sync --locked
 uv run --locked tsbs-alibaba-cpu --help
 ```
 
-### 2. Download the Alibaba machine usage table
+### 2. Download the published dataset (recommended)
 
-Alibaba asks users to fill in a [short survey](http://alibabadeveloper.mikecrm.com/BdJtacN) first. The direct link below comes from the official [`fetchData.sh`](https://github.com/alibaba/clusterdata/blob/master/cluster-trace-v2018/fetchData.sh).
+GitHub Releases ship the derived `compatible` and `matched_tsbs` views for SF1–SF1000, plus queries and the machine mapping. They do **not** include Alibaba's raw `machine_usage.csv` or the TSBS reference ILP.
+
+```bash
+mkdir -p data
+curl -L -o data/alibaba_day1-v0.2.0.tar.gz \
+  https://github.com/zanw1/tsbs-alibaba-cpu/releases/download/v0.2.0/alibaba_day1-v0.2.0.tar.gz
+# optional: curl -L -o data/alibaba_day1-v0.2.0.tar.gz.sha256 \
+#   https://github.com/zanw1/tsbs-alibaba-cpu/releases/download/v0.2.0/alibaba_day1-v0.2.0.tar.gz.sha256
+#   (cd data && shasum -a 256 -c alibaba_day1-v0.2.0.tar.gz.sha256)
+tar -xzf data/alibaba_day1-v0.2.0.tar.gz -C data
+# produces data/alibaba_day1-v0.2.0/ with compatible/, matched_tsbs/, queries/, ...
+```
+
+After extraction you can already load the ILP files and use `queries/sfN.jsonl`. Source-level `validate` still needs the raw CSV and TSBS references from the rebuild path below.
+
+The release is intended for research and study, matching Alibaba's stated use of the original trace. It does not relicense that trace.
+
+### 3. Rebuild from original inputs (optional)
+
+Requirements for a full rebuild:
+
+- Python 3.11+ and [uv](https://docs.astral.sh/uv/).
+- About 20 GB of free disk: 9 GB for the raw CSV, 3.3 GB for TSBS references, 4 GB for output, and 1.8 GB for the download.
+- Go, only if you generate the TSBS references yourself.
+
+On an Apple M4 with 32 GB of RAM, building or validating all four scale factors takes about 2 minutes each.
+
+#### 3a. Download Alibaba `machine_usage.csv`
+
+Get the official v2018 machine-usage table from the [Alibaba clusterdata project](https://github.com/alibaba/clusterdata) ([trace_2018.md](https://github.com/alibaba/clusterdata/blob/master/cluster-trace-v2018/trace_2018.md)). Alibaba asks users to fill in a [short survey](http://alibabadeveloper.mikecrm.com/BdJtacN) first. The direct link below comes from the official [`fetchData.sh`](https://github.com/alibaba/clusterdata/blob/master/cluster-trace-v2018/fetchData.sh):
 
 ```bash
 mkdir -p inputs/raw
@@ -132,9 +153,9 @@ curl -L -o inputs/raw/machine_usage.tar.gz \
 tar -xzf inputs/raw/machine_usage.tar.gz -C inputs/raw
 ```
 
-The archive is 1.7 GB. It extracts to `machine_usage.csv`: 9.0 GB, 246,934,820 rows, 4,023 machines over 8 days.
+The archive is 1.7 GB. It extracts to `machine_usage.csv`: 9.0 GB, 246,934,820 rows, 4,023 machines over 8 days. This project never redistributes that file.
 
-### 3. Generate the TSBS references
+#### 3b. Generate the TSBS references
 
 Build `tsbs_generate_data` from [TSBS](https://github.com/timescale/tsbs), then run:
 
@@ -156,7 +177,7 @@ It also sets `GODEBUG=randseednop=0`. Without that setting, Go 1.24+ ignores TSB
 
 > The TSBS revision used for the reference checksums was not recorded. If your `inputs/tsbs_reference/*/cpu.ilp` hashes differ from [`docs/checksums.sha256`](docs/checksums.sha256), your matched control will differ from the published one. The pipeline and validation still work.
 
-### 4. Build
+#### 3c. Build
 
 The machine mapping, [`inputs/machine_mapping.csv`](inputs/machine_mapping.csv), is part of the repository. It lists 1,000 machines and was selected as follows: take the first-day machines with a valid CPU value, sort them by numeric ID, and then apply `random.Random(123).sample(..., 1000)`.
 
@@ -176,7 +197,7 @@ Options:
 
 The build writes to a temporary directory and publishes only after every stage succeeds. It refuses to overwrite an existing output. If it fails, it writes a `*.failure-*.json` diagnostic next to the target.
 
-### 5. Verify
+#### 3d. Verify
 
 ```bash
 shasum -a 256 -c docs/checksums.sha256       # optional: compare with the reference build
@@ -187,7 +208,7 @@ uv run --locked tsbs-alibaba-cpu validate \
   --references inputs/tsbs_reference
 ```
 
-### 6. Optional: database readback check
+#### 3e. Optional: database readback check
 
 ```bash
 uv run --locked tsbs-alibaba-cpu oracle-check \
@@ -195,6 +216,47 @@ uv run --locked tsbs-alibaba-cpu oracle-check \
 ```
 
 This loads SF1 of one view into a uniquely named, temporary QuestDB WAL table. It reads all 21 columns back, compares them, and drops the table. It checks transport and types only and does not replace `validate`. It passed on QuestDB 9.3.4.
+
+## Scaling beyond SF1000
+
+The published mapping stops at 1,000 hosts. That is enough for correctness checks and most paired experiments. Larger scales are not in the default release, but the same tools can build them.
+
+Hard limits and nesting rules:
+
+- Trace day 0 has about **4,016** machines with at least one valid CPU observation. That is the practical upper bound for a single-day build. The full v2018 trace has 4,023 machines.
+- Smaller scale factors must be **prefixes** of the same ordered mapping: SF1 ⊂ SF10 ⊂ SF100 ⊂ SF1000 ⊂ SF*N*. If you grow beyond 1,000 hosts, keep the existing first 1,000 rows of [`inputs/machine_mapping.csv`](inputs/machine_mapping.csv) unchanged so published SF1000 checksums still match.
+- You cannot infer SF4000 from the SF1000 files. Extra hosts need new mapping rows, a new TSBS reference generated at that scale, and a rebuild from the raw CSV. TSBS auxiliary columns are generated per scale factor, so they are not nested even when machine/time/CPU keys are.
+- Do not invent SF10000 on day 0. There are not enough distinct machines; repeating hosts or silently changing days would change the experiment semantics.
+
+Example: extend to 4,000 hosts while preserving the published prefix.
+
+```bash
+# 1) Build a new mapping whose first 1000 rows equal inputs/machine_mapping.csv
+#    and whose remaining rows are additional day-0 machines chosen with a fixed rule.
+# 2) Generate references for every requested scale, including the new ones.
+uv run --locked tsbs-alibaba-cpu generate-references \
+  --binary /path/to/tsbs_generate_data \
+  --output inputs/tsbs_reference_sf4000 \
+  --scales 1,10,100,1000,4000 --seed 123
+
+# 3) Build into a new directory (existing outputs are never overwritten).
+uv run --locked tsbs-alibaba-cpu build \
+  --source inputs/raw/machine_usage.csv \
+  --references inputs/tsbs_reference_sf4000 \
+  --mapping inputs/machine_mapping_sf4000.csv \
+  --output data/alibaba_day1_sf4000 \
+  --scales 1,10,100,1000,4000 --day 0 --query-samples 20
+```
+
+Size warning: a full TSBS `cpu-only` day at SF4000 is `4000 × 8640` rows before sparsity filtering. Expect several times the disk use of SF1000 for references and outputs.
+
+Maintainers packaging a GitHub Release from a local build can run:
+
+```bash
+bash scripts/package_release.sh 0.2.0 data/alibaba_day1 dist/release
+```
+
+That writes `dist/release/alibaba_day1-v0.2.0.tar.gz` and a sidecar `.sha256`. The archive excludes `machine_usage.csv`, TSBS references, and local `validation_runs/` / `oracle_runs/`.
 
 ## Correctness contract
 
