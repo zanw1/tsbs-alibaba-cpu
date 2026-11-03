@@ -1,0 +1,67 @@
+{
+  "files": {
+    "scales": {
+      "1": {
+        "status": "passed",
+        "rows": 4800,
+        "native_null_counts": {
+          "mem_gps": 4800,
+          "mkpi": 4800
+        },
+        "native_abnormal_counts": {},
+        "all_paired_keys_and_auxiliary_values_equal": true
+      },
+      "10": {
+        "status": "passed",
+        "rows": 50366,
+        "native_null_counts": {
+          "mem_gps": 50366,
+          "mkpi": 50366
+        },
+        "native_abnormal_counts": {
+          "disk_io_percent": 18
+        },
+        "all_paired_keys_and_auxiliary_values_equal": true
+      },
+      "100": {
+        "status": "passed",
+        "rows": 527685,
+        "native_null_counts": {
+          "mem_gps": 527685,
+          "mkpi": 527685
+        },
+        "native_abnormal_counts": {
+          "disk_io_percent": 162
+        },
+        "all_paired_keys_and_auxiliary_values_equal": true
+      },
+      "1000": {
+        "status": "passed",
+        "rows": 5223307,
+        "native_null_counts": {
+          "mem_gps": 5223307,
+          "mkpi": 5223307
+        },
+        "native_abnormal_counts": {
+          "disk_io_percent": 4568
+        },
+        "all_paired_keys_and_auxiliary_values_equal": true
+      }
+    },
+    "native_byte_exact_nesting": true
+  },
+  "questdb": {
+    "status": "passed",
+    "rows": 4800,
+    "all_nine_columns_equal": true,
+    "row_count_mem_gps_count_mkpi_count": [
+      4800,
+      0,
+      0
+    ],
+    "temporary_table": "alibaba_native_qa_aa23e9eb910948799e8181cf200c5bd8",
+    "temporary_table_dropped": true
+  },
+  "scope": "No performance benchmark or generated-kernel correctness claim.",
+  "completed_at_utc": "2026-09-06T17:00:54.848141+00:00"
+}

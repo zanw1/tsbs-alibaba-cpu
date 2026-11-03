@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "scale": 1,
+  "scope": "SQL execution and output-row cardinality for every deduplicated SF1 query; not a performance benchmark.",
+  "executed_instances": 281,
+  "temporary_table_dropped": true
+}

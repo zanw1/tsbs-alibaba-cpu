@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "checked_parameter_combinations": 1200,
+  "normalization": "Absent optional values (None and empty host list) omitted in new format; these retain all-host/no-predicate semantics.",
+  "scope": "One-time audit against original generator; package has no TSDB imports. SQL alignment/order explicit; duplicate Q1 instances removed."
+}

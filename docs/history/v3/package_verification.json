@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "wheel": "alibaba_tsdb_dataset-0.1.0-py3-none-any.whl",
+  "numpy_locked_version": "2.5.3",
+  "installed_without_source_checkout": true,
+  "fixture_build_without_old_project": true,
+  "relocated_bundle_validation": true,
+  "execution_cwd": "outside source project",
+  "native_missing_cpu_real_database_readback": {
+    "status": "passed",
+    "scope": "SF1 native database transport/schema readback",
+    "table": "alibaba_dataset_check_e0998328a3a04eaca3e8f82253a0213b",
+    "server_build": "Build Information: QuestDB 9.3.4, JDK 17.0.9, Commit Hash 9ea33219e5e349dcde28ff6ff7988f272363f1df",
+    "rows": 2,
+    "all_nine_columns_equal": true,
+    "temporary_table_dropped": true,
+    "completed_at_utc": "2026-09-06T17:34:10.518690+00:00"
+  },
+  "wheel_member_count": 12,
+  "large_data_in_wheel": false,
+  "temporary_environment_and_test_data_removed": true
+}

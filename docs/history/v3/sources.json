@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "title": "TSBS",
+    "publisher": "Timescale / TSBS maintainers",
+    "primary_url": "https://github.com/timescale/tsbs",
+    "corroboration_or_code_url": "https://raw.githubusercontent.com/timescale/tsbs/master/README.md",
+    "verified_facts": "Synthetic DevOps/IoT data; separately controlled data generation, loading and queries; seeds and scales.",
+    "application": "Keep the existing CPU-only contract and exact per-SF reference files.",
+    "accessed": "2026-09-07",
+    "source_class": "primary",
+    "download_scope": "Documentation/source inspected; alternative bulk datasets were not downloaded."
+  },
+  {
+    "id": 2,
+    "title": "TSM-Bench (PVLDB 2023)",
+    "publisher": "Khelifati et al. / eXascale Infolab",
+    "primary_url": "https://www.vldb.org/pvldb/vol16/p3363-khelifati.pdf",
+    "corroboration_or_code_url": "https://github.com/eXascaleInfolab/TSM-Bench",
+    "verified_facts": "Water monitoring seeds augmented in series count and length using GAN/LSH; benchmark data features and query variability.",
+    "application": "Use explicit data provenance and separate controls for value distribution and missingness; no GAN training needed at current scale.",
+    "accessed": "2026-09-07",
+    "source_class": "primary",
+    "download_scope": "Documentation/source inspected; alternative bulk datasets were not downloaded."
+  },
+  {
+    "id": 3,
+    "title": "TSM-Bench dataset and generator recipes",
+    "publisher": "eXascale Infolab",
+    "primary_url": "https://github.com/eXascaleInfolab/TSM-Bench/tree/main/datasets",
+    "corroboration_or_code_url": "https://github.com/eXascaleInfolab/TSM-Bench/tree/main/generation",
+    "verified_facts": "Seed data water temperature/level; generation distinguishes new series from longer series.",
+    "application": "Distinguish host scaling from time scaling and distinguish synthesized values from observations.",
+    "accessed": "2026-09-07",
+    "source_class": "primary",
+    "download_scope": "Documentation/source inspected; alternative bulk datasets were not downloaded."
+  },
+  {
+    "id": 4,
+    "title": "IoT Benchmark",
+    "publisher": "Tsinghua thulab / Apache IoTDB documentation",
+    "primary_url": "https://iotdb.apache.org/UserGuide/latest/Tools-System/Benchmark.html",
+    "corroboration_or_code_url": "https://raw.githubusercontent.com/thulab/iot-benchmark/master/configuration/conf/config.properties",
+    "verified_facts": "Separate data/query seeds; real-file validation; sensor timestamp alignment, irregular frequency and out-of-order controls.",
+    "application": "Freeze query seeds independently and describe missingness explicitly.",
+    "accessed": "2026-09-07",
+    "source_class": "primary",
+    "download_scope": "Documentation/source inspected; alternative bulk datasets were not downloaded."
+  },
+  {
+    "id": 5,
+    "title": "SciTS database benchmark, 2022 / v2 2023 update",
+    "publisher": "Mostafa et al. / project maintainers",
+    "primary_url": "https://doi.org/10.1145/3538712.3538723",
+    "corroboration_or_code_url": "https://raw.githubusercontent.com/jalalmostafa/scits/master/README.md",
+    "verified_facts": "Configurable sensors, durations, dimensions and concurrency; v2 supports regular/irregular ingestion.",
+    "application": "Keep cardinality, metric width, sample interval and concurrency as separate experimental dimensions.",
+    "accessed": "2026-09-07",
+    "source_class": "primary",
+    "download_scope": "Documentation/source inspected; alternative bulk datasets were not downloaded."
+  },
+  {
+    "id": 6,
+    "title": "DEBS 2014 Smart Homes",
+    "publisher": "ACM DEBS Grand Challenge organizers",
+    "primary_url": "https://debs.org/grand-challenges/2014/",
+    "corroboration_or_code_url": "https://debs.org/grand-challenges/2014/",
+    "verified_facts": "Real-profile-driven synthesized data with missing observations; 10/20/40-house subsets explicitly defined by prefix IDs.",
+    "application": "Keep fixed nested machine populations; do not call hybrid data wholly real.",
+    "accessed": "2026-09-07",
+    "source_class": "primary",
+    "download_scope": "Documentation/source inspected; alternative bulk datasets were not downloaded."
+  },
+  {
+    "id": 7,
+    "title": "Intel Lab Data",
+    "publisher": "MIT / Intel Berkeley / TinyDB researchers",
+    "primary_url": "https://db.csail.mit.edu/labdata/labdata.html",
+    "corroboration_or_code_url": "https://db.csail.mit.edu/labdata/labdata.html",
+    "verified_facts": "54 sensors; temperature/humidity/light/voltage; approximately 2.3 million readings; nominal 31-second sampling with missing epochs.",
+    "application": "Good next genuine non-CPU domain; preserve timestamp irregularity and physical units.",
+    "accessed": "2026-09-07",
+    "source_class": "primary",
+    "download_scope": "Documentation/source inspected; alternative bulk datasets were not downloaded."
+  },
+  {
+    "id": 8,
+    "title": "ElectricityLoadDiagrams20112014",
+    "publisher": "UCI / Artur Trindade",
+    "primary_url": "https://archive.ics.uci.edu/dataset/321/electricityloaddiagrams20112014",
+    "corroboration_or_code_url": "https://doi.org/10.24432/C58C86",
+    "verified_facts": "370 clients, 15-minute values; data already encode some pre-start and daylight-saving gaps as zeros; CC BY 4.0.",
+    "application": "Do not interpret every zero as a real measurement or treat kW as CPU percent.",
+    "accessed": "2026-09-07",
+    "source_class": "primary",
+    "download_scope": "Documentation/source inspected; alternative bulk datasets were not downloaded."
+  },
+  {
+    "id": 9,
+    "title": "Google ClusterData2019",
+    "publisher": "Google / John Wilkes",
+    "primary_url": "https://raw.githubusercontent.com/google/cluster-data/master/ClusterData2019.md",
+    "corroboration_or_code_url": "https://raw.githubusercontent.com/google/cluster-data/master/README.md",
+    "verified_facts": "Eight Borg cells in May 2019; CPU histograms over five-minute windows; approximately 2.4 TiB compressed and BigQuery access; CC BY.",
+    "application": "High cost alternative: resource-window records cannot be relabeled as instantaneous machine CPU samples.",
+    "accessed": "2026-09-07",
+    "source_class": "primary",
+    "download_scope": "Documentation/source inspected; alternative bulk datasets were not downloaded."
+  },
+  {
+    "id": 10,
+    "title": "Alibaba Cluster Trace v2018",
+    "publisher": "Alibaba Cluster Trace Program",
+    "primary_url": "https://raw.githubusercontent.com/alibaba/clusterdata/master/cluster-trace-v2018/schema.txt",
+    "corroboration_or_code_url": "https://raw.githubusercontent.com/alibaba/clusterdata/master/cluster-trace-v2018/trace_2018.md",
+    "verified_facts": "Machine table has one ID, relative time and seven real metrics; disk values -1/101 are documented abnormal values.",
+    "application": "Export a native seven-field view with missing fields omitted in ILP and anomaly values preserved.",
+    "accessed": "2026-09-07",
+    "source_class": "primary",
+    "download_scope": "Documentation/source inspected; alternative bulk datasets were not downloaded."
+  }
+]

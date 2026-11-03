@@ -1,0 +1,29 @@
+{
+  "question": "How do real TSDB benchmarks construct data, and which methods improve this Alibaba/TSBS dataset without changing the main engine pipeline?",
+  "scope": [
+    "TSDB benchmark papers and first-party generation recipes",
+    "raw monitoring datasets",
+    "missingness, scaling, semantic preservation and query coverage"
+  ],
+  "excluded": [
+    "forecasting-only benchmark rankings",
+    "unverified database speed claims",
+    "large alternative dataset downloads",
+    "changing mainline baselines"
+  ],
+  "searches": [
+    "time series database real datasets construction TSBS SciTS IoTDB",
+    "Intel Lab sensor dataset official",
+    "DEBS 2014 Smart Homes official",
+    "ElectricityLoadDiagrams20112014 UCI",
+    "Google ClusterData2019 official",
+    "TSM-Bench D-LONG D-MULTI generator",
+    "IoT Benchmark data/query seeds and timestamp alignment"
+  ],
+  "stop_rule": "Primary evidence covers synthetic, real, real-profile augmentation, scaling and missingness; further broad searches would not change the chosen local improvements.",
+  "limitations": [
+    "Targeted deep search, not an exhaustive systematic review.",
+    "No external speed ranking was adopted.",
+    "Dataset research-use and redistribution conditions remain source-specific."
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "1": {
+    "rows": 4800,
+    "grid_coverage": 0.5555555555555556,
+    "cpu_mean": 36.00729166666667,
+    "high_cpu_gt_90_fraction": 0.0,
+    "cpu_cdf_max_distance_to_all_machines_day1": 0.19160172309431628,
+    "per_machine_rows_min_median_max": [
+      4800,
+      4800.0,
+      4800
+    ],
+    "per_machine_minute_buckets_min_median_max": [
+      816,
+      816.0,
+      816
+    ],
+    "per_machine_hour_buckets_min_median_max": [
+      17,
+      17.0,
+      17
+    ]
+  },
+  "10": {
+    "rows": 50366,
+    "grid_coverage": 0.5829398148148148,
+    "cpu_mean": 37.71111464082913,
+    "high_cpu_gt_90_fraction": 3.970932772108168e-05,
+    "cpu_cdf_max_distance_to_all_machines_day1": 0.1277760520066778,
+    "per_machine_rows_min_median_max": [
+      3293,
+      5199.0,
+      6483
+    ],
+    "per_machine_minute_buckets_min_median_max": [
+      568,
+      882.5,
+      1103
+    ],
+    "per_machine_hour_buckets_min_median_max": [
+      15,
+      20.5,
+      23
+    ]
+  },
+  "100": {
+    "rows": 527685,
+    "grid_coverage": 0.6107465277777778,
+    "cpu_mean": 33.004205160275546,
+    "high_cpu_gt_90_fraction": 0.0001857168575949667,
+    "cpu_cdf_max_distance_to_all_machines_day1": 0.015634304589861203,
+    "per_machine_rows_min_median_max": [
+      3261,
+      5317.5,
+      6841
+    ],
+    "per_machine_minute_buckets_min_median_max": [
+      560,
+      905.5,
+      1162
+    ],
+    "per_machine_hour_buckets_min_median_max": [
+      15,
+      21.0,
+      24
+    ]
+  },
+  "1000": {
+    "rows": 5223307,
+    "grid_coverage": 0.6045494212962963,
+    "cpu_mean": 33.28795071781153,
+    "high_cpu_gt_90_fraction": 0.00019106669395461533,
+    "cpu_cdf_max_distance_to_all_machines_day1": 0.010510966457086324,
+    "per_machine_rows_min_median_max": [
+      79,
+      5308.5,
+      7630
+    ],
+    "per_machine_minute_buckets_min_median_max": [
+      15,
+      904.0,
+      1293
+    ],
+    "per_machine_hour_buckets_min_median_max": [
+      1,
+      21.0,
+      24
+    ]
+  }
+}

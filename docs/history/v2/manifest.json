@@ -1,0 +1,115 @@
+{
+  "dataset_id": "alibaba_dataset_suite_v2",
+  "status": "constructed",
+  "source": "machine_usage.csv",
+  "source_bytes": 8996532344,
+  "v1_source": "alibaba_cpu_tsbs_v1",
+  "source_window_seconds": [
+    0,
+    86400
+  ],
+  "machine_mapping": "alibaba_cpu_tsbs_v1/machine_mapping.csv",
+  "selection_changed": false,
+  "gap_filling": false,
+  "scales": {
+    "1": {
+      "rows": 4800,
+      "expected_source_rows": 4800,
+      "paired_cpu_only_difference": true,
+      "missing_native_fields": {
+        "mem_gps": 4800,
+        "mkpi": 4800
+      },
+      "native_rows_excluded_for_missing_cpu": 0,
+      "files": {
+        "compatible": "compatible/sf1/cpu.ilp",
+        "matched_tsbs": "matched_tsbs/sf1/cpu.ilp",
+        "native": "native/sf1/machine_usage.ilp"
+      },
+      "bytes": {
+        "compatible": 1636780,
+        "matched_tsbs": 1635505,
+        "native": 661391
+      }
+    },
+    "10": {
+      "rows": 50366,
+      "expected_source_rows": 50366,
+      "paired_cpu_only_difference": true,
+      "missing_native_fields": {
+        "mem_gps": 50366,
+        "mkpi": 50366
+      },
+      "native_rows_excluded_for_missing_cpu": 0,
+      "files": {
+        "compatible": "compatible/sf10/cpu.ilp",
+        "matched_tsbs": "matched_tsbs/sf10/cpu.ilp",
+        "native": "native/sf10/machine_usage.ilp"
+      },
+      "bytes": {
+        "compatible": 17232956,
+        "matched_tsbs": 17224460,
+        "native": 6976845
+      }
+    },
+    "100": {
+      "rows": 527685,
+      "expected_source_rows": 527685,
+      "paired_cpu_only_difference": true,
+      "missing_native_fields": {
+        "mem_gps": 527685,
+        "mkpi": 527685
+      },
+      "native_rows_excluded_for_missing_cpu": 0,
+      "files": {
+        "compatible": "compatible/sf100/cpu.ilp",
+        "matched_tsbs": "matched_tsbs/sf100/cpu.ilp",
+        "native": "native/sf100/machine_usage.ilp"
+      },
+      "bytes": {
+        "compatible": 181868357,
+        "matched_tsbs": 181840753,
+        "native": 73037220
+      }
+    },
+    "1000": {
+      "rows": 5223307,
+      "expected_source_rows": 5223307,
+      "paired_cpu_only_difference": true,
+      "missing_native_fields": {
+        "mem_gps": 5223307,
+        "mkpi": 5223307
+      },
+      "native_rows_excluded_for_missing_cpu": 0,
+      "files": {
+        "compatible": "compatible/sf1000/cpu.ilp",
+        "matched_tsbs": "matched_tsbs/sf1000/cpu.ilp",
+        "native": "native/sf1000/machine_usage.ilp"
+      },
+      "bytes": {
+        "compatible": 1807139631,
+        "matched_tsbs": 1806911888,
+        "native": 722638281
+      }
+    }
+  },
+  "native_fields": [
+    "cpu_util_percent",
+    "mem_util_percent",
+    "mem_gps",
+    "mkpi",
+    "net_in",
+    "net_out",
+    "disk_io_percent"
+  ],
+  "native_tag": "machine_id",
+  "native_missing_policy": "Omit absent ILP fields; database reads them as NULL. Preserve source sentinel values.",
+  "native_row_policy": "Same valid-CPU row population as compatible v1; selected first-day missing CPU counts disclosed per scale.",
+  "compatible_kind": "Relative symlinks to unmodified v1 data, not independent copies.",
+  "matched_control_kind": "Original per-SF TSBS values filtered to exactly the Alibaba observation keys.",
+  "query_policy": "Existing Q1-Q15 parameter generator, evaluation seeds 10001..10020; no selection using output size or timing. Empty instances retained.",
+  "native_nested": true,
+  "compatible_auxiliary_nested": false,
+  "timing_measurements": "not performed",
+  "completed_at_utc": "2026-09-06T16:55:31.837979+00:00"
+}

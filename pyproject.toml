@@ -1,0 +1,27 @@
+[project]
+name = "tsbs-alibaba-cpu"
+version = "0.2.0"
+description = "Real Alibaba CPU traces paired with matched TSBS controls for time-series database experiments"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+keywords = ["time-series", "benchmark", "tsbs", "alibaba", "cluster-trace", "dataset"]
+dependencies = ["numpy>=1.26,<3"]
+
+[project.scripts]
+tsbs-alibaba-cpu = "tsbs_alibaba_cpu.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=9,<10"]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-p no:cacheprovider"

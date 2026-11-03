@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "kept_data_comparisons": {
+    "compatible": {
+      "1": {
+        "byte_identical_to_v3": true
+      },
+      "10": {
+        "byte_identical_to_v3": true
+      },
+      "100": {
+        "byte_identical_to_v3": true
+      },
+      "1000": {
+        "byte_identical_to_v3": true
+      }
+    },
+    "matched_tsbs": {
+      "1": {
+        "byte_identical_to_v3": true
+      },
+      "10": {
+        "byte_identical_to_v3": true
+      },
+      "100": {
+        "byte_identical_to_v3": true
+      },
+      "1000": {
+        "byte_identical_to_v3": true
+      }
+    }
+  },
+  "native_archived": true,
+  "active_native_exists": false
+}
